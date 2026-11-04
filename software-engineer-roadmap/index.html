@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<script>document.documentElement.classList.add("js")</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap สู่ Software Engineer</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="Roadmap สู่ Software Engineer">
+<meta property="og:description" content="เส้นทางเปลี่ยนสายจาก Design Engineer (PLC/Automation) สู่ Software Engineer เริ่มจากศูนย์ พร้อมแหล่งเรียนฟรี">
+<meta name="description" content="เส้นทางเปลี่ยนสายจาก Design Engineer (PLC/Automation) สู่ Software Engineer เริ่มจากศูนย์">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Caveat:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- hand-drawn wobble filter -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+</svg>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="logo">PLC <span>→</span> &lt;SWE/&gt;</div>
+    <div class="meter" aria-label="ความคืบหน้า"><i id="bar"></i></div>
+    <div class="pct" id="pct">0%</div>
+    <nav class="nav-dots" id="dots" aria-label="ไปยังด่าน"></nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">ROADMAP · START FROM 0</span>
+      <h1>
+        <span class="strike">Design Engineer</span><br>
+        สู่ <span class="scribble">Software
+          <svg viewBox="0 0 300 22" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 60 4, 110 20, 160 10 S 250 4, 297 13" fill="none" stroke="#17a398" stroke-width="5" stroke-linecap="round"/></svg>
+        </span><br>Engineer
+      </h1>
+      <p class="lead">แผนเปลี่ยนสายแบบ <b>เริ่มจากศูนย์</b> ด้วยเวลาว่างหลังเลิกงาน ~15–20 ชม./สัปดาห์ แต่คุณไม่ได้เริ่มจากศูนย์จริง ๆ หรอก เพราะการเขียน <b>Structured Text, SFC, CFC</b> ใน CODESYS ก็คือการเขียนโปรแกรมอยู่แล้ว เราแค่ย้ายจากโลกของ scan cycle ไปสู่โลกของ software</p>
+      <div class="hero-stats">
+        <div class="stat"><b>9 ด่าน</b><small>จาก setup ถึงได้งาน</small></div>
+        <div class="stat"><b>12–15 เดือน</b><small>ถ้าทำสม่ำเสมอ</small></div>
+        <div class="stat"><b>3 โปรเจกต์</b><small>flagship ใส่ portfolio</small></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 420 380">
+        <!-- blob bg -->
+        <path d="M70 80 C 140 10, 300 20, 360 90 S 400 280, 300 330 S 60 360, 40 250 S 20 130, 70 80Z" fill="#ff9ec7" opacity=".55"/>
+        <path d="M95 105 C 160 50, 290 60, 330 120 S 350 270, 270 300 S 90 320, 75 230 S 60 140, 95 105Z" fill="#f2b632" opacity=".45" transform="translate(14 10)"/>
+        <!-- gear -->
+        <g class="float">
+          <g class="spin" transform="translate(120 170)">
+            <g transform="translate(-50 -50)">
+              <path d="M50 8 l8 0 3 12 10 4 10-7 6 6-7 10 4 10 12 3 0 8-12 3-4 10 7 10-6 6-10-7-10 4-3 12-8 0-3-12-10-4-10 7-6-6 7-10-4-10-12-3 0-8 12-3 4-10-7-10 6-6 10 7 10-4z" fill="#17a398" stroke="#1f2a44" stroke-width="3" stroke-linejoin="round" transform="translate(-4 -4) scale(1.08)"/>
+              <circle cx="50" cy="50" r="15" fill="#f5eddc" stroke="#1f2a44" stroke-width="3"/>
+            </g>
+          </g>
+          <text x="82" y="250" font-family="Space Mono" font-size="14" font-weight="700" fill="#1f2a44">IF Start THEN</text>
+        </g>
+        <!-- dashed arrow -->
+        <path d="M175 140 C 220 90, 260 100, 285 140" fill="none" stroke="#1f2a44" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round"/>
+        <path d="M273 128 l14 14 -18 4" fill="none" stroke="#1f2a44" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- code window -->
+        <g class="float d2">
+          <g transform="translate(240 160) rotate(5)">
+            <rect x="0" y="0" width="150" height="112" rx="10" fill="#fffaf0" stroke="#1f2a44" stroke-width="3"/>
+            <rect x="0" y="0" width="150" height="24" rx="10" fill="#1f2a44"/>
+            <circle cx="16" cy="12" r="4" fill="#ff6b5b"/><circle cx="30" cy="12" r="4" fill="#f2b632"/><circle cx="44" cy="12" r="4" fill="#7cc35a"/>
+            <text x="16" y="56" font-family="Space Mono" font-size="30" font-weight="700" fill="#ff6b5b">{ }</text>
+            <rect x="72" y="40" width="58" height="7" rx="3" fill="#8f7dff"/>
+            <rect x="72" y="55" width="40" height="7" rx="3" fill="#17a398"/>
+            <rect x="16" y="78" width="110" height="7" rx="3" fill="#1f2a44" opacity=".25"/>
+            <rect x="16" y="92" width="76" height="7" rx="3" fill="#1f2a44" opacity=".25"/>
+          </g>
+        </g>
+        <!-- doodles -->
+        <g stroke="#1f2a44" stroke-width="2.5" fill="none" stroke-linecap="round">
+          <path d="M60 60 l0 18 M51 69 l18 0"/>
+          <path d="M360 50 l0 14 M353 57 l14 0"/>
+          <path d="M350 320 q10 -14 20 0 t20 0"/>
+          <circle cx="44" cy="310" r="7"/>
+        </g>
+        <text x="215" y="350" font-family="Caveat" font-size="30" font-weight="700" fill="#1f2a44" transform="rotate(-5 215 350)">same logic, new world!</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ============ BRIDGE ============ -->
+<section class="sec" id="bridge">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">ของที่คุณมีอยู่แล้ว</span>
+      <h2>สะพานเชื่อม PLC → Software</h2>
+      <p>ทักษะ automation ที่ใช้ได้ทันที แค่เปลี่ยนชื่อเรียก</p>
+    </div>
+    <div class="bridge">
+      <div class="br sk" style="--bg:#fffaf0;--sh:var(--coral)"><span class="from">Structured Text</span><div class="arrow">↓ กลายเป็น</div><div class="to">Python / TypeScript</div><p>IF, CASE, FOR, WHILE ใช้ตรรกะเดียวกัน ต่างกันแค่ syntax</p></div>
+      <div class="br sk" style="--bg:#fff1c9;--sh:var(--teal)"><span class="from">Function Block</span><div class="arrow">↓ กลายเป็น</div><div class="to">Class / Object (OOP)</div><p>FB instance = object, VAR_INPUT/OUTPUT = properties & methods</p></div>
+      <div class="br sk" style="--bg:#e8e3ff;--sh:var(--mustard)"><span class="from">SFC</span><div class="arrow">↓ กลายเป็น</div><div class="to">State Machine</div><p>Step/Transition คือ pattern ที่ใช้บ่อยมากใน backend, UI และเกม</p></div>
+      <div class="br sk" style="--bg:#dff4ef;--sh:var(--lilac)"><span class="from">CFC</span><div class="arrow">↓ กลายเป็น</div><div class="to">Dataflow / Reactive</div><p>ต่อกล่องไหลข้อมูล ≈ RxJS, Node-RED, data pipeline</p></div>
+      <div class="br sk" style="--bg:#dff4ef;--sh:var(--coral)"><span class="from">Scan Cycle</span><div class="arrow">↓ กลายเป็น</div><div class="to">Event Loop</div><p>วงรอบอ่าน input → ประมวลผล → เขียน output คือหัวใจของ JavaScript</p></div>
+      <div class="br sk" style="--bg:#ffe3ee;--sh:var(--teal)"><span class="from">HMI Design</span><div class="arrow">↓ กลายเป็น</div><div class="to">Frontend UI/UX</div><p>ออกแบบหน้าจอให้ operator ใช้ง่าย = ออกแบบหน้าเว็บให้ user ใช้ง่าย</p></div>
+      <div class="br sk" style="--bg:#fffaf0;--sh:var(--lilac)"><span class="from">Commissioning</span><div class="arrow">↓ กลายเป็น</div><div class="to">Debugging & Testing</div><p>ไล่ปัญหาหน้างานทีละจุด = ทักษะ debug ที่ junior หลายคนยังไม่มี</p></div>
+      <div class="br sk" style="--bg:#fff1c9;--sh:var(--coral)"><span class="from">IEC 61131-3</span><div class="arrow">↓ กลายเป็น</div><div class="to">Coding Standards</div><p>คุ้นกับมาตรฐานอยู่แล้ว ต่อไปคือ style guide, linter, code review</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROAD ============ -->
+<section class="sec" id="road" style="padding-top:20px">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">ติ๊กทีละข้อ แล้วดูเส้นทางเดินไปข้างหน้า</span>
+      <h2>เส้นทาง 9 ด่าน</h2>
+      <p>เช็กลิสต์จะถูกจำไว้ในเบราว์เซอร์นี้ เปิดกลับมาเมื่อไหร่ก็ยังอยู่</p>
+    </div>
+    <div class="road" id="roadEl">
+      <svg class="path" id="pathSvg" aria-hidden="true"></svg>
+      <div id="stops"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THAI LIB ============ -->
+<section class="sec" id="thai">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">เรียนเป็นภาษาไทยก็ได้</span>
+      <h2>คลังเรียนฟรีภาษาไทย</h2>
+      <p>ใช้เสริมตอนที่เนื้อหาภาษาอังกฤษยากเกินไป แต่ควรค่อย ๆ ขยับไปอ่านภาษาอังกฤษให้ได้</p>
+    </div>
+    <div class="lib">
+      <div class="sk" style="--bg:#ffe3ee;--sh:var(--coral)"><h4>Chula MOOC</h4><p>คอร์สออนไลน์ฟรีจากจุฬาฯ มีทั้ง programming, data และ AI บางคอร์สมีใบประกาศ</p><a class="go" href="https://mooc.chula.ac.th" target="_blank" rel="noopener">mooc.chula.ac.th ↗</a></div>
+      <div class="sk" style="--bg:#fff1c9;--sh:var(--teal)"><h4>Thai MOOC</h4><p>รวมคอร์สฟรีจากมหาวิทยาลัยทั่วประเทศ ค้นคำว่า Python, Web, Database ได้เลย</p><a class="go" href="https://thaimooc.ac.th" target="_blank" rel="noopener">thaimooc.ac.th ↗</a></div>
+      <div class="sk" style="--bg:#dff4ef;--sh:var(--lilac)"><h4>prasertcbs (YouTube)</h4><p>อาจารย์ประเสริฐสอน Python, SQL, Excel ภาษาไทย คลิปสั้น ตรงประเด็น เหมาะใช้หาคำตอบเฉพาะเรื่อง</p><a class="go" href="https://www.youtube.com/@prasertcbs" target="_blank" rel="noopener">youtube.com/@prasertcbs ↗</a></div>
+      <div class="sk" style="--bg:#e8e3ff;--sh:var(--mustard)"><h4>BorntoDev School</h4><p>มีคอร์สฟรีพื้นฐาน programming / web ภาษาไทย (บางคอร์สเสียเงิน ให้เลือกเฉพาะอันที่ฟรี)</p><a class="go" href="https://school.borntodev.com" target="_blank" rel="noopener">school.borntodev.com ↗</a></div>
+      <div class="sk" style="--bg:#fff1c9;--sh:var(--lilac)"><h4>KongRuksiam Tutorial (YouTube)</h4><p>ช่องสอนเขียนโปรแกรมภาษาไทยที่ครอบคลุมมาก ทั้ง Python, JavaScript, React, SQL, FastAPI และ Django</p><a class="go" href="https://www.youtube.com/@kongruksiamtutorial" target="_blank" rel="noopener">youtube.com/@kongruksiamtutorial ↗</a></div>
+      <div class="sk" style="--bg:#fffaf0;--sh:var(--coral)"><h4>programming.in.th</h4><p>ฝึกโจทย์ algorithm ภาษาไทย ใช้คู่กับด่าน 02</p><a class="go" href="https://programming.in.th" target="_blank" rel="noopener">programming.in.th ↗</a></div>
+      <div class="sk" style="--bg:#ffe3ee;--sh:var(--teal)"><h4>AI เป็นติวเตอร์ส่วนตัว</h4><p>ให้ AI อธิบายเป็นภาษาไทย หรือแปล docs ที่อ่านไม่เข้าใจ แต่ต้องพิมพ์โค้ดเองทุกบรรทัด</p><span class="go mono">ฟรี / ใช้ได้ทุกด่าน</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WEEK ============ -->
+<section class="sec" id="week">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">สำหรับคนที่ยังทำงานประจำอยู่</span>
+      <h2>จังหวะ 1 สัปดาห์</h2>
+      <p>รวมประมาณ 16–18 ชม. ความสม่ำเสมอสำคัญกว่าการอัดหนักวันเดียว</p>
+    </div>
+    <div class="week">
+      <div class="day sk" style="--bg:#fffaf0;--sh:var(--coral)"><span class="d">จ.</span><span class="h">1.5 ชม.</span><p>เรียนเนื้อหาใหม่ + จดโน้ตด้วยคำพูดตัวเอง</p></div>
+      <div class="day sk" style="--bg:#fff1c9;--sh:var(--teal)"><span class="d">อ.</span><span class="h">1.5 ชม.</span><p>ฝึกเขียนโค้ดตามบทเรียน (ห้ามแค่ดู)</p></div>
+      <div class="day sk" style="--bg:#dff4ef;--sh:var(--mustard)"><span class="d">พ.</span><span class="h">1.5 ชม.</span><p>โจทย์ algorithm 1–2 ข้อ</p></div>
+      <div class="day sk" style="--bg:#e8e3ff;--sh:var(--coral)"><span class="d">พฤ.</span><span class="h">1.5 ชม.</span><p>เรียนเนื้อหาใหม่ต่อ</p></div>
+      <div class="day sk" style="--bg:#ffe3ee;--sh:var(--lilac)"><span class="d">ศ.</span><span class="h">พัก</span><p>พักสมอง อ่านบทความ tech เบา ๆ</p></div>
+      <div class="day sk" style="--bg:#fff1c9;--sh:var(--coral)"><span class="d">ส.</span><span class="h">5 ชม.</span><p>วันทำโปรเจกต์! เอาที่เรียนมาสร้างของจริง</p></div>
+      <div class="day sk" style="--bg:#dff4ef;--sh:var(--ink)"><span class="d">อา.</span><span class="h">3 ชม.</span><p>ทบทวน, commit, เขียนสรุปสิ่งที่ได้เรียนรู้ลง GitHub/บล็อก</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RULES ============ -->
+<section class="sec" id="rules">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">อ่านทุกครั้งที่ท้อ</span>
+      <h2>กฎทอง 6 ข้อ</h2>
+    </div>
+    <div class="rules">
+      <div class="rule sk" style="--rb:#ffe3ee"><div class="n">01</div><h4>Build &gt; Watch</h4><p>ดูคลิป 1 ชม. ต้องเขียนโค้ดเอง 2 ชม. ระวังติดกับดัก “tutorial hell”</p></div>
+      <div class="rule sk" style="--rb:#fff1c9"><div class="n">02</div><h4>Commit ทุกวัน</h4><p>ตาราง contribution สีเขียวบน GitHub เป็นหลักฐานความสม่ำเสมอที่ HR มองเห็น</p></div>
+      <div class="rule sk" style="--rb:#dff4ef"><div class="n">03</div><h4>อ่านภาษาอังกฤษให้คล่อง</h4><p>docs, error message, Stack Overflow เป็นภาษาอังกฤษเกือบทั้งหมด ฝึกอ่านทุกวัน</p></div>
+      <div class="rule sk" style="--rb:#e8e3ff"><div class="n">04</div><h4>ใช้ AI เป็นครู ไม่ใช่คนทำแทน</h4><p>ให้ AI อธิบายและรีวิวโค้ด แต่พิมพ์และเข้าใจทุกบรรทัดด้วยตัวเอง</p></div>
+      <div class="rule sk" style="--rb:#fffaf0"><div class="n">05</div><h4>ใช้ความเป็น Automation ให้คุ้ม</h4><p>คนที่เข้าใจทั้งเครื่องจักรและซอฟต์แวร์มีน้อย นี่คือจุดแข็งที่หาได้ยาก ไม่ใช่จุดอ่อน</p></div>
+      <div class="rule sk" style="--rb:#ffe3ee"><div class="n">06</div><h4>เรียนแบบสาธารณะ</h4><p>โพสต์สิ่งที่เรียนลง LinkedIn ทุกสัปดาห์ คอนเนกชันและโอกาสจะเข้ามาเอง</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOBS ============ -->
+<section class="sec" id="jobs">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">ตำแหน่งที่ปลายทางเปิดรอ</span>
+      <h2>ตำแหน่งที่เหมาะกับคุณ</h2>
+      <p>ยิ่งใกล้กับ industry มากเท่าไหร่ ประสบการณ์เดิมยิ่งมีค่า</p>
+    </div>
+    <div class="jobs">
+      <div class="job" style="--jc:var(--coral)">Automation Software Engineer<small>เหมาะที่สุด · ใช้ทักษะเดิมได้เต็ม</small></div>
+      <div class="job" style="--jc:var(--teal)">IIoT / Industry 4.0 Developer<small>MQTT, OPC UA, cloud</small></div>
+      <div class="job" style="--jc:var(--mustard)">MES / SCADA Developer<small>web + database + factory</small></div>
+      <div class="job" style="--jc:var(--lilac)">Backend Engineer<small>API, database, ระบบ</small></div>
+      <div class="job" style="--jc:var(--pink)">Full-stack Developer<small>ทั้ง frontend และ backend</small></div>
+      <div class="job" style="--jc:var(--sky)">Embedded / Firmware Engineer<small>ถ้าชอบอยู่ใกล้ฮาร์ดแวร์</small></div>
+      <div class="job" style="--jc:var(--leaf)">Test Automation / QA Engineer<small>ประตูบานแรกที่เข้าได้ง่าย</small></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="hand">Hello, World! คือก้าวแรก 🚀</span>
+    <p>Roadmap นี้ออกแบบสำหรับคนเปลี่ยนสายจากงาน PLC / Industrial Automation · ปรับเวลาให้เข้ากับจังหวะชีวิตตัวเองได้เลย</p>
+    <button class="btn" id="reset">ล้างความคืบหน้าทั้งหมด</button>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
