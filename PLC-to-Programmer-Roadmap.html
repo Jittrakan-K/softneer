@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<title>PLC to Programmer Roadmap</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai+Looped:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@500;600&display=swap">
+<style>
+/* Layout: the plan is drawn as an IEC 61131-3 SFC. Steps sit on a rail, transitions are the gates, action blocks hold the checklist. */
+:root {
+  --bg: #dfe1dc;        /* RAL 7035 cabinet paint */
+  --surface: #eceee9;
+  --raised: #f6f7f3;
+  --ink: #1d2223;
+  --ink-2: #4c5454;
+  --ink-3: #636b6a;
+  --line: rgba(29, 34, 35, .16);
+  --rail: #3b4344;
+  --lamp: #2f9e5f;
+  --lamp-ink: #1a6b3e;
+  --lamp-wash: rgba(47, 158, 95, .14);
+  --amber: #8f5a07;
+  --lamp-off: #aeb3ae;
+  --display: "IBM Plex Sans Thai", "Noto Sans Thai", Tahoma, sans-serif;
+  --body: "IBM Plex Sans Thai Looped", "IBM Plex Sans Thai", "Noto Sans Thai", Tahoma, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16191a; --surface: #1f2324; --raised: #272c2d; --ink: #e8ebe7; --ink-2: #b4bab6; --ink-3: #9aa19d;
+    --line: rgba(232, 235, 231, .15); --rail: #99a19d; --lamp: #48c07f; --lamp-ink: #7fdba9; --lamp-wash: rgba(72, 192, 127, .13);
+    --amber: #e6b25a; --lamp-off: #4a5151; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16191a; --surface: #1f2324; --raised: #272c2d; --ink: #e8ebe7; --ink-2: #b4bab6; --ink-3: #9aa19d;
+  --line: rgba(232, 235, 231, .15); --rail: #99a19d; --lamp: #48c07f; --lamp-ink: #7fdba9; --lamp-wash: rgba(72, 192, 127, .13);
+  --amber: #e6b25a; --lamp-off: #4a5151; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.65 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: var(--lamp-ink); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--lamp-ink); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.3; }
+p { margin: 0; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* Header */
+.hero { padding-block: 48px 40px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(32px, 4.6vw, 48px); line-height: 1.22; }
+.lead { margin-top: 16px; max-width: 34em; color: var(--ink-2); font-size: 17px; }
+.addr { font-family: var(--mono); font-size: 13px; color: var(--ink-3); margin-bottom: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: grid; gap: 16px; }
+.state { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center; }
+.state b { display: block; font-family: var(--display); font-size: 20px; font-weight: 600; line-height: 1.35; }
+.state span { color: var(--ink-2); font-size: 14px; }
+.lamp { width: 24px; height: 24px; border-radius: 50%; border: 3px solid var(--rail); background: var(--lamp-off); flex: none; }
+.lamp.on { background: radial-gradient(circle at 38% 34%, #d6f7e3 0 12%, var(--lamp) 58%, #1e7b48 100%); }
+.lamp.warn { background: radial-gradient(circle at 38% 34%, #ffeec7 0 12%, #e0a236 58%, #a86f12 100%); }
+.lamp.mini { width: 16px; height: 16px; border-width: 2px; }
+.reads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; border-top: 1px solid var(--line); padding-top: 16px; margin: 0; }
+.reads div { min-width: 0; }
+.reads dt { font-size: 13px; color: var(--ink-3); }
+.reads dd { margin: 0; font-family: var(--mono); font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.hours { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 14px; color: var(--ink-2); }
+.hours input { width: 72px; min-height: 36px; padding: 4px 8px; font: 500 15px var(--mono); color: var(--ink); background: var(--raised); border: 1px solid var(--line); border-radius: 4px; text-align: right; }
+
+/* Week strip */
+.strip { padding-bottom: 32px; }
+.strip-bar { display: flex; gap: 8px; }
+.seg { min-width: 0; }
+.seg-weeks { display: flex; gap: 2px; height: 16px; }
+.wk { flex: 1; min-width: 0; background: var(--lamp-off); opacity: .55; }
+.wk.past { background: var(--rail); opacity: 1; }
+.wk.now { background: var(--lamp); opacity: 1; }
+.seg-name { font-size: 13px; color: var(--ink-2); margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.strip-note { font-size: 13px; color: var(--ink-3); margin-top: 8px; }
+
+/* Nav */
+nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-block: 1px solid var(--line); }
+.nav-in { display: flex; align-items: center; gap: 4px; overflow-x: auto; min-height: 48px; }
+.nav-in a { color: var(--ink-2); text-decoration: none; font-size: 15px; padding: 6px 12px; border-radius: 4px; white-space: nowrap; transition: color .15s, background-color .15s; }
+.nav-in a:hover { color: var(--ink); background: var(--surface); }
+#sync { margin-left: auto; font-size: 13px; color: var(--ink-3); white-space: nowrap; padding-left: 12px; }
+
+section.block { padding-block: 56px 16px; scroll-margin-top: 48px; }
+.block > .wrap > h2, .sec-head h2 { font-size: 28px; }
+.sec-lead { margin-top: 8px; max-width: 42em; color: var(--ink-2); }
+.sec-head { margin-bottom: 32px; }
+
+/* SFC chart */
+.chart { --rx: 44px; --stepw: 88px; --rw: 2px; }
+.row { display: grid; grid-template-columns: var(--stepw) 32px minmax(0, 1fr); position: relative; }
+.row::before { content: ""; position: absolute; left: calc(var(--rx) - 1px); top: 0; bottom: 0; width: var(--rw); background: var(--rail); }
+.row.first::before { top: 0; }
+.stepbox { position: relative; z-index: 1; width: var(--stepw); height: 72px; background: var(--raised); border: 2px solid var(--rail); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font: 500 15px var(--mono); }
+.stepbox.initial { outline: 2px solid var(--rail); outline-offset: -8px; }
+.step[data-s="active"] .stepbox { background: var(--lamp-wash); border-color: var(--lamp); }
+.step[data-s="done"] .stepbox { background: var(--rail); color: var(--bg); }
+.stepbox .lamp.mini { border-color: currentColor; }
+.conn { height: 2px; background: var(--rail); margin-top: 35px; }
+.action { background: var(--surface); border: 2px solid var(--rail); display: grid; grid-template-columns: 32px minmax(0, 1fr); min-width: 0; margin-bottom: 0; }
+.step[data-s="wait"] .action { border-color: var(--line); }
+.step[data-s="active"] .action { border-color: var(--lamp); }
+.qual { border-right: 1px solid var(--line); text-align: center; font: 500 14px var(--mono); padding-top: 16px; color: var(--ink-3); }
+.a-body { padding: 16px 20px 20px; min-width: 0; }
+.a-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; align-items: baseline; }
+.a-head h3 { font-size: 20px; }
+.a-meta { font-family: var(--mono); font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.a-why { color: var(--ink-2); font-size: 15px; margin-top: 4px; }
+.checks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; }
+.checks label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; padding: 6px 8px; margin-inline: -8px; border-radius: 4px; cursor: pointer; transition: background-color .15s; }
+.checks label:hover { background: var(--raised); }
+.checks input { width: 18px; height: 18px; margin: 4px 0 0; accent-color: var(--lamp-ink); }
+.checks .gate-c { font-weight: 500; }
+.checks input:checked + span { color: var(--ink-3); }
+.trans { display: grid; grid-template-columns: var(--stepw) 32px minmax(0, 1fr); position: relative; min-height: 64px; align-items: center; }
+.trans::before { content: ""; position: absolute; left: calc(var(--rx) - 1px); top: 0; bottom: 0; width: var(--rw); background: var(--rail); }
+.bar { position: relative; z-index: 1; grid-column: 1; width: 48px; height: 6px; margin-left: calc(var(--rx) - 24px); background: var(--rail); }
+.trans[data-s="true"] .bar { background: var(--lamp); }
+.t-label { grid-column: 2 / 4; padding-left: 8px; display: flex; flex-wrap: wrap; gap: 0 12px; align-items: baseline; }
+.t-label b { font-family: var(--display); font-size: 16px; font-weight: 600; }
+.t-label span { font-size: 14px; color: var(--ink-2); }
+.t-label .mono { font-size: 13px; color: var(--ink-3); }
+.trans.key .t-label b { color: var(--lamp-ink); }
+/* Simultaneous divergence and convergence */
+.dbl { position: relative; height: 6px; border-block: 2px solid var(--rail); margin-left: calc(var(--rx) - 1px); margin-right: calc(50% - 8px - var(--rx) - 1px); z-index: 1; }
+.par { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.par .step { display: grid; grid-template-rows: auto 1fr; position: relative; }
+.par .step::before { content: ""; position: absolute; left: calc(var(--rx) - 1px); top: 0; bottom: 0; width: var(--rw); background: var(--rail); }
+.par .action { position: relative; z-index: 1; margin-top: 16px; height: calc(100% - 16px); }
+.row.end::before { bottom: auto; height: 0; }
+.par .step .stepwrap { padding-top: 16px; position: relative; z-index: 1; }
+
+/* Tables and text sections */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 15px; }
+th { text-align: left; font-family: var(--display); font-weight: 600; font-size: 14px; color: var(--ink-2); }
+th, td { padding: 12px 16px; vertical-align: top; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+.note { margin-top: 16px; max-width: 46em; color: var(--ink-2); font-size: 15px; }
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.split > div { min-width: 0; }
+.split h3 { font-size: 18px; margin-bottom: 8px; }
+.work { border-top: 2px solid var(--rail); padding-top: 12px; }
+.work p + p { margin-top: 8px; }
+ul.plain { margin: 8px 0 0; padding-left: 20px; }
+ul.plain li + li { margin-top: 4px; }
+.map { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 15px; }
+.map dt, .map dd { margin: 0; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.map dt { font-family: var(--mono); font-size: 14px; }
+.map dd { color: var(--ink-2); }
+.map dt:nth-last-of-type(1), .map dd:last-child { border-bottom: 0; }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; align-items: end; max-width: 560px; height: 176px; }
+.day { display: grid; grid-template-rows: 1fr auto; height: 100%; text-align: center; font-size: 14px; color: var(--ink-2); }
+.day i { align-self: end; display: block; background: var(--rail); }
+.day.long i { background: var(--lamp); }
+.day .mono { display: block; font-size: 13px; }
+.rs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 32px; margin: 0; padding: 0; list-style: none; }
+.rs li { border-top: 1px solid var(--line); padding-top: 8px; min-width: 0; }
+.rs span { display: block; font-size: 13px; color: var(--ink-3); }
+footer { margin-top: 64px; border-top: 1px solid var(--line); padding-block: 24px 40px; font-size: 14px; color: var(--ink-3); }
+.foot { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; align-items: center; }
+button.ghost { font: 400 14px var(--body); color: var(--ink-2); background: none; border: 1px solid var(--line); border-radius: 4px; min-height: 36px; padding: 4px 12px; cursor: pointer; transition: background-color .15s, color .15s; }
+button.ghost:hover { background: var(--surface); color: var(--ink); }
+button.ghost.arm { color: var(--amber); border-color: var(--amber); }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 32px; }
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .rs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .chart { --rx: 28px; --stepw: 56px; }
+  .row, .trans { grid-template-columns: var(--stepw) 8px minmax(0, 1fr); }
+  .stepbox { height: 64px; font-size: 14px; }
+  .conn { margin-top: 31px; }
+  .action { grid-template-columns: minmax(0, 1fr); }
+  .qual { display: none; }
+  .a-body { padding: 12px 12px 16px; }
+  .bar { width: 40px; margin-left: calc(var(--rx) - 20px); }
+  .par { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .dbl { margin-right: 0; width: 56px; }
+  .par .step { padding-left: 64px; }
+  .par .step::before { left: calc(var(--rx) - 1px); }
+  .par .step .stepwrap { position: absolute; left: 0; top: 0; }
+  .par .action { margin-top: 16px; height: auto; }
+  .seg-name { display: none; }
+  .rs { grid-template-columns: minmax(0, 1fr); }
+  #sync { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <p class="addr">ประกาศ INET เชียงใหม่ · แผนเริ่ม 9 พ.ย. 2569</p>
+      <h1>จาก PLC สู่ Programmer ใน <span id="h-weeks">26</span> สัปดาห์</h1>
+      <p class="lead">แผนย้ายสายของ Nuy เขียนเป็นผัง SFC ติ๊กงานในแต่ละสเต็ป แล้ว Transition จะผ่านเอง สเต็ปถัดไปจึงติดไฟ</p>
+    </div>
+    <div class="panel" aria-live="polite">
+      <div class="state">
+        <div class="lamp" id="r-lamp"></div>
+        <div><b id="r-step">S1 ตั้งหลัก</b><span id="r-time"></span></div>
+      </div>
+      <dl class="reads">
+        <div><dt>เกณฑ์ที่ติ๊กแล้ว</dt><dd id="r-count">0 / 0</dd></div>
+        <div><dt>เริ่มสมัครงาน</dt><dd id="r-g3"></dd></div>
+      </dl>
+      <div class="hours">
+        <label for="hours">เวลาเรียนต่อสัปดาห์ (ชั่วโมง)</label>
+        <input id="hours" type="number" min="5" max="40" step="1" value="15" inputmode="numeric">
+      </div>
+    </div>
+  </header>
+  <div class="strip" aria-label="สัปดาห์ของแผน แยกตามเฟส">
+    <div class="strip-bar" id="strip"></div>
+    <p class="strip-note" id="strip-note"></p>
+  </div>
+</div>
+
+<nav aria-label="ส่วนของหน้า">
+  <div class="wrap nav-in">
+    <a href="#roadmap">Roadmap</a>
+    <a href="#job">ประกาศงาน</a>
+    <a href="#stack">Stack</a>
+    <a href="#work">ผลงาน</a>
+    <a href="#apply">สมัครงาน</a>
+    <a href="#schedule">ตารางเรียน</a>
+    <a href="#learn">แหล่งเรียนรู้</a>
+    <span id="sync">บันทึกในเบราว์เซอร์นี้</span>
+  </div>
+</nav>
+
+<main>
+  <section class="block" id="roadmap">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Roadmap</h2>
+        <p class="sec-lead">เริ่มสมัครได้เมื่อผ่าน Gate 3 จากนั้น Deploy กับการสมัครงานวิ่งขนานกัน เหมือน Simultaneous branch ใน SFC</p>
+      </div>
+      <div class="chart" id="chart"></div>
+    </div>
+  </section>
+
+  <section class="block" id="job">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>ประกาศงานต้องการอะไร</h2>
+        <p class="sec-lead">ช่องว่างหลักอยู่ที่ Web, ฐานข้อมูล และการ Deploy ส่วนการคิดเป็นระบบและการ Debug มีฐานจากงาน PLC แล้ว</p>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>ประกาศระบุ</th><th>ฐานเดิมที่ใช้ต่อได้</th><th>ต้องเพิ่ม</th></tr></thead>
+        <tbody>
+          <tr><td>ปริญญาตรีวิศวกรรมศาสตร์หรือวิทยาศาสตร์ สาขาคอมพิวเตอร์หรือที่เกี่ยวข้อง</td><td>ต้องตรวจสาขาที่จบ</td><td>โทรถามว่าสาขาของคุณเข้าข่ายหรือไม่</td></tr>
+          <tr><td>Web application และ Web services</td><td>ออกแบบ Function Block และ Control Logic</td><td>HTTP, REST API, Frontend, Backend</td></tr>
+          <tr><td>HTML/CSS, VueJS, AngularTS</td><td>ประสบการณ์จาก CALSA</td><td>Vue และ TypeScript ก่อน Angular ไว้ทีหลัง</td></tr>
+          <tr><td>Node.js, GoLang, Python</td><td>Structured Text, SFC, CFC</td><td>Node.js ก่อน ภาษาอื่นไว้หลังได้งาน</td></tr>
+          <tr><td>SQL, MySQL, MongoDB</td><td>ยังไม่มีข้อมูลประสบการณ์</td><td>SQL และการออกแบบตาราง</td></tr>
+          <tr><td>Docker และ Deploy ขึ้น Production</td><td>ยังไม่มีข้อมูลประสบการณ์</td><td>Linux, Docker, Nginx, CI/CD</td></tr>
+          <tr><td>UAT, SIT, Debug และแก้ Bug หลังใช้งานจริง</td><td>การไล่ปัญหาเชิงระบบจากงาน PLC</td><td>เขียน Test Case, อ่าน Log, บันทึก Bug</td></tr>
+          <tr><td>ทำงานร่วมกับ Software Engineer, Designer, PM</td><td>การทำงานเป็นโปรเจกต์</td><td>Git, Pull Request, Issue Tracker</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">ผู้ประกาศคือ <a href="https://www.jobthai.com/th/company/job/1082395">บริษัท อินเทอร์เน็ตประเทศไทย จำกัด (มหาชน) หรือ INET</a> ประจำอำเภอเมืองเชียงใหม่ ประกาศไม่ระบุเงินเดือน AngularTS น่าจะหมายถึง Angular กับ TypeScript ส่วน MongoDB เป็นข้อได้เปรียบ ไม่ใช่สิ่งที่ต้องมีตั้งแต่ต้น</p>
+    </div>
+  </section>
+
+  <section class="block" id="stack">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Stack ที่เลือก</h2>
+        <p class="sec-lead">เรียนสายเดียวให้ลึกพอทำผลงานจริง ใช้ภาษาเดียวกันได้ทั้ง Frontend และ Backend</p>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>ชั้นงาน</th><th>เลือกเรียน</th><th>เหตุผล</th></tr></thead>
+        <tbody>
+          <tr><td>ภาษา</td><td class="mono">TypeScript</td><td>มี Type ชัดเจน คล้ายการประกาศตัวแปรใน Structured Text และต่อไป Angular ได้</td></tr>
+          <tr><td>Frontend</td><td class="mono">Vue 3, Vite</td><td>ประกาศระบุ Vue และ <a href="https://ecorpit.com/vue-js-development-company/">3.5 คือสายเสถียรเมื่อ ส.ค. 2569</a> เช็กเวอร์ชันล่าสุดก่อนติดตั้ง</td></tr>
+          <tr><td>Backend</td><td class="mono">Node.js 26, Express</td><td>ประกาศระบุ Node.js และ <a href="https://github.com/nodejs/node/releases/tag/v26.13.0">26 เข้าสู่ LTS เมื่อ 28 ต.ค. 2569</a></td></tr>
+          <tr><td>ฐานข้อมูล</td><td class="mono">MySQL</td><td>ประกาศระบุชัด และทักษะ SQL ใช้กับฐานข้อมูลเชิงสัมพันธ์อื่นได้</td></tr>
+          <tr><td>Deploy</td><td class="mono">Docker, Nginx, Linux VPS</td><td>ตรงกับงาน Deploy บน Production Server</td></tr>
+          <tr><td>ทดสอบ</td><td class="mono">Vitest, Playwright</td><td>ใช้แสดงความเข้าใจงาน Testing และ UAT</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">ยังไม่ต้องเรียน Angular, Go, Python และ MongoDB ในรอบนี้ เมื่อผ่าน Gate 4 แล้วค่อยเลือกตามที่บริษัทใช้จริง ถ้าสมัครบริษัทอื่นด้วยให้ดูประกาศเป็นรายบริษัท เพราะ <a href="https://enstacked.com/stack-overflow-developer-survey-insights/">ผลสำรวจระดับโลกปี 2025 มีผู้ใช้ React 46.9% และ Vue 18.4%</a> ซึ่งไม่ได้แทนตลาดเชียงใหม่</p>
+    </div>
+  </section>
+
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>ผลงานที่ต้องมีตอนสมัคร</h2>
+        <p class="sec-lead">CALSA เป็นผลงานหลัก ส่วน PLC simulator เป็นจุดต่างจากผู้สมัครคนอื่น</p>
+      </div>
+      <div class="split">
+        <div class="work">
+          <h3>CALSA</h3>
+          <p>Vue, REST API, MySQL, Login, Test, Docker, Deploy และ Demo ด้วยข้อมูลตัวอย่าง</p>
+          <p>ตรงกับงาน Full-stack, UAT, Deploy และแก้ Bug ใช้ข้อมูลสมมติใน Demo เสมอ เพราะข้อมูลเงินเดือนเป็นข้อมูลอ่อนไหว</p>
+        </div>
+        <div class="work">
+          <h3>PLC simulator</h3>
+          <p>จำลอง 1 สถานการณ์ เช่น สายพานคัดแยกโลหะ พร้อม State Machine, Test และ README ที่อธิบายการออกแบบ</p>
+          <p>ตรงกับการออกแบบระบบ ตรรกะซับซ้อน และ UI แบบโต้ตอบ การเชื่อมต่อ GX Works2 ค่อยทำหลังสมัครงาน</p>
+        </div>
+      </div>
+      <p class="note">README ทุกผลงานควรมีลิงก์ Demo, ภาพหน้าจอ, Architecture, วิธีรันในเครื่อง, ปัญหาที่เจอ และวิธีแก้</p>
+    </div>
+  </section>
+
+  <section class="block" id="apply">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>เตรียมสมัครงาน</h2>
+        <p class="sec-lead">เล่าว่าคุณเขียนโปรแกรมควบคุมระบบจริงอยู่แล้ว และกำลังนำวิธีคิดนั้นมาใช้กับซอฟต์แวร์ โดยมีผลงานที่ Deploy จริงเป็นหลักฐาน</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>แปลประสบการณ์ PLC เป็นภาษาซอฟต์แวร์</h3>
+          <dl class="map">
+            <dt>Function Block</dt><dd>Class หรือ Module ที่แยกหน้าที่ชัดเจน</dd>
+            <dt>SFC</dt><dd>State Machine และ Workflow</dd>
+            <dt>Interlock</dt><dd>Validation และการป้องกันสถานะผิดพลาด</dd>
+            <dt>Commissioning</dt><dd>Integration Testing และ Debug</dd>
+            <dt>คู่มือและผังระบบ</dt><dd>README และเอกสาร API</dd>
+          </dl>
+        </div>
+        <div>
+          <h3>โทรถาม INET สาขาเชียงใหม่ 3 เรื่อง</h3>
+          <ul class="plain">
+            <li>สาขาที่จบเข้าเกณฑ์หรือไม่</li>
+            <li>รับผู้ย้ายสายหรือไม่</li>
+            <li>ทีมเชียงใหม่ใช้ Stack ใด</li>
+          </ul>
+          <h3 style="margin-top:24px">ถ้าประกาศนี้ไม่ผ่าน</h3>
+          <p>Software Tester, งาน Web ระดับเริ่มต้น หรือซอฟต์แวร์สายอุตสาหกรรม เช่น SCADA, MES และ IoT ซึ่งใช้ประสบการณ์ PLC เป็นจุดแข็งได้ตรงกว่า</p>
+        </div>
+      </div>
+      <p class="note">การเริ่มใหม่อาจได้ระดับ Junior ตัวอย่างในเชียงใหม่เมื่อ มิ.ย. 2569 คือ Software Developer 25,000–30,000 บาทบน JobThai ซึ่งเป็นเพียงประกาศเดียว ไม่ใช่ค่าเฉลี่ยตลาด</p>
+    </div>
+  </section>
+
+  <section class="block" id="schedule">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>ตารางเรียนรายสัปดาห์</h2>
+        <p class="sec-lead">รวม 15 ชั่วโมง ใช้ประมาณ 30% เรียนเนื้อหา และ 70% ลงมือทำ ถ้าไม่ทันให้ตัดขอบเขตฟีเจอร์ แต่ยังต้องผ่านเกณฑ์ของแต่ละ Gate</p>
+      </div>
+      <div class="week" role="img" aria-label="จันทร์ถึงพฤหัสบดีวันละ 1.5 ชั่วโมง เสาร์ 5 ชั่วโมง อาทิตย์ 4 ชั่วโมง">
+        <div class="day"><i style="height:30%"></i><span>จ<span class="mono">1.5</span></span></div>
+        <div class="day"><i style="height:30%"></i><span>อ<span class="mono">1.5</span></span></div>
+        <div class="day"><i style="height:30%"></i><span>พ<span class="mono">1.5</span></span></div>
+        <div class="day"><i style="height:30%"></i><span>พฤ<span class="mono">1.5</span></span></div>
+        <div class="day"><i style="height:0"></i><span>ศ<span class="mono">0</span></span></div>
+        <div class="day long"><i style="height:100%"></i><span>ส<span class="mono">5</span></span></div>
+        <div class="day long"><i style="height:80%"></i><span>อา<span class="mono">4</span></span></div>
+      </div>
+      <p class="note">วันธรรมดาเรียนเนื้อหาใหม่และทำแบบฝึกหัดสั้น เสาร์และอาทิตย์เขียนโปรเจกต์ Commit และสรุปสิ่งที่เรียน</p>
+    </div>
+  </section>
+
+  <section class="block" id="learn">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>แหล่งเรียนรู้</h2>
+        <p class="sec-lead">ใช้ The Odin Project เป็นเส้นทางหลัก แล้วใช้เอกสารทางการเมื่อถึงแต่ละเทคโนโลยี</p>
+      </div>
+      <ul class="rs">
+        <li><span>เส้นทาง Full-stack</span><a href="https://www.theodinproject.com/">The Odin Project</a></li>
+        <li><span>แผนที่หัวข้อ</span><a href="https://roadmap.sh">roadmap.sh</a></li>
+        <li><span>แบบฝึกหัด</span><a href="https://www.freecodecamp.org/learn/">freeCodeCamp</a></li>
+        <li><span>HTML, CSS, JavaScript, HTTP</span><a href="https://developer.mozilla.org/">MDN Web Docs</a></li>
+        <li><span>TypeScript</span><a href="https://www.typescriptlang.org/docs/handbook/">TypeScript Handbook</a></li>
+        <li><span>Vue</span><a href="https://vuejs.org/guide/introduction.html">Vue Documentation</a></li>
+        <li><span>Node.js</span><a href="https://nodejs.org/en/learn">Node.js Learn</a></li>
+        <li><span>SQL</span><a href="https://dev.mysql.com/doc/">MySQL Documentation</a></li>
+        <li><span>Docker</span><a href="https://docs.docker.com/">Docker Documentation</a></li>
+        <li><span>ความปลอดภัย</span><a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>ข้อมูลประกาศและเวอร์ชัน ณ 5 พ.ย. 2569 · <a href="https://claude.ai/artifact/UVvPW6pZ1sEtdRK7DW98YF">เอกสาร Roadmap ฉบับเต็ม</a></span>
+    <button class="ghost" id="reset" type="button">ล้างความคืบหน้า</button>
+  </div>
+</footer>
+
+<script>
+const START = '2026-11-09', BASE_H = 15, STORE = 'plc-roadmap-v1';
+const PHASES = [
+  { id: 's1', s: 'S1', name: 'ตั้งหลัก', short: 'ตั้งหลัก', w: 2, why: 'ตั้งเครื่องมือให้พร้อม และนำ CALSA เข้า GitHub',
+    t: 'พร้อมขึ้นเฟส 2', tNote: 'สร้าง Branch ทำ PR แก้ Conflict ได้เอง',
+    c: ['ฝึก Git, GitHub, Command Line, VS Code และ Chrome DevTools', 'เรียน Linux พื้นฐาน', 'ตรวจสาขาที่จบและโทรสอบถาม INET', 'นำ CALSA เข้า GitHub', 'เขียน README และสรุปว่า CALSA ใช้เทคโนโลยีอะไร', '*สร้าง Branch, ทำ Pull Request และแก้ Merge Conflict ได้เอง'] },
+  { id: 's2', s: 'S2', name: 'พื้นฐาน Web และ TypeScript', short: 'Web + TS', w: 6, why: 'เขียนหน้าเว็บและคุยกับ API ได้โดยไม่ใช้ Framework',
+    t: 'Gate 1', tNote: 'เรียก API ได้',
+    c: ['เรียน HTML และ CSS Layout', 'เรียน JavaScript, TypeScript และ DOM', 'เรียน Async/Await และ HTTP', 'ทำหน้าจำลองสายพานใน PLC simulator ด้วย TypeScript ล้วน โดยจัดสถานะเป็น State Machine', '*เขียนหน้าเว็บที่ Responsive และเรียก API ด้วย Fetch ได้', '*อธิบาย Request และ Response ได้'] },
+  { id: 's3', s: 'S3', name: 'Frontend ด้วย Vue', short: 'Vue', w: 4, why: 'สร้างหน้าจอ CALSA ใหม่ด้วย Vue',
+    t: 'Gate 2', tNote: 'Frontend ครบ',
+    c: ['เรียน Vue Component และ Composition API', 'เรียน Vue Router, Pinia และการจัดการ Form', 'สร้างหน้าจอ CALSA ด้วย Vue และ TypeScript รวมการ Validate ข้อมูล', '*Frontend ทำงานครบด้วยข้อมูลจำลอง', '*แสดงผลได้ทั้งมือถือและคอมพิวเตอร์'] },
+  { id: 's4', s: 'S4', name: 'Backend และฐานข้อมูล', short: 'Backend', w: 8, why: 'ทำ API และฐานข้อมูลให้ CALSA ใช้งานได้จริง',
+    t: 'Gate 3', tNote: 'เริ่มสมัครงาน', key: true,
+    c: ['เรียน Node.js, Express และ REST API', 'เรียน SQL, Join, Index และ Transaction', 'เรียน Authentication และ OWASP Top 10', 'ทำ API ของ CALSA พร้อม MySQL, Login, สิทธิ์ผู้ใช้ และเอกสาร API', '*เปิด CALSA ผ่านลิงก์สาธารณะได้ มี Login และจัดการข้อมูลครบ', '*อธิบายโค้ดทุกส่วนได้เอง'] },
+  { id: 's5', s: 'S5', name: 'Testing, Docker และ Deploy', short: 'Deploy', w: 6, why: 'ทำให้ระบบทดสอบและ Deploy ได้อัตโนมัติ',
+    t: 'Gate 4', tNote: 'Deploy อัตโนมัติ',
+    c: ['เรียน Unit Test และ E2E Test', 'เรียน Docker Compose, Nginx, HTTPS และ GitHub Actions', 'เรียน Log และ Backup', 'เขียน Test Case แบบ SIT และ UAT', 'ให้ผู้ใช้จริงทดลอง 3 คน และแก้ Bug ตามรายงาน', 'ปรับ PLC simulator ให้พร้อมเป็นผลงานเสริม', '*Push โค้ดแล้ว Test และ Deploy อัตโนมัติ', '*ย้อนเวอร์ชันได้', '*มีบันทึกการแก้ปัญหาจริงอย่างน้อย 3 เรื่อง'] }
+];
+const APPLY = { id: 's6', s: 'S6', name: 'สมัครงาน', why: 'ทำคู่กับเฟส 5 ผู้สัมภาษณ์จะเห็นระบบพัฒนาไปพร้อมกัน',
+  c: ['ทำ Resume 1 หน้า วางผลงานก่อนประวัติงาน PLC และบอกผลลัพธ์ที่วัดได้', 'จัด GitHub ให้ Commit สม่ำเสมอ และปักหมุด 2 ผลงาน', 'ทบทวน JavaScript, HTTP, SQL Join, Authentication, Docker และ Git', 'ฝึกโจทย์ Array, String, Object และ SQL ระดับง่ายถึงกลาง', 'ฝึกอธิบายทุกไฟล์สำคัญ แม้ส่วนที่ใช้ AI ช่วยเขียน', 'ส่งใบสมัครตำแหน่ง Programmer / Developer'] };
+const ALL = [...PHASES, APPLY];
+const MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+const $ = id => document.getElementById(id);
+
+let state = { done: {}, hours: BASE_H };
+try { const s = JSON.parse(localStorage.getItem(STORE)); if (s && s.done) state = { done: s.done, hours: s.hours || BASE_H }; } catch (e) {}
+
+const toDay = s => Math.round(Date.parse(s + 'T00:00:00Z') / 864e5);
+const fromDay = n => new Date(n * 864e5).toISOString().slice(0, 10);
+const todayNum = () => { const d = new Date(); return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); };
+const fmt = (n, full) => { const [y, m, d] = fromDay(n).split('-').map(Number); const b = y + 543; return `${d} ${MONTHS.at(m - 1)} ${full ? b : String(b).slice(2)}`; };
+const key = (p, i) => `${p.id}-${i}`;
+const stepDone = p => p.c.every((_, i) => state.done[key(p, i)]);
+
+function plan() {
+  let cur = toDay(START), wk = 0;
+  return PHASES.map(p => {
+    const weeks = Math.ceil(p.w * BASE_H / state.hours - 1e-9);
+    const r = { ...p, weeks, from: cur, to: cur + weeks * 7 - 1, wkFrom: wk, hrs: p.w * BASE_H };
+    cur += weeks * 7; wk += weeks; return r;
+  });
+}
+const label = t => t.replace(/^\*/, '');
+function checks(p) {
+  return '<ul class="checks">' + p.c.map((t, i) => {
+    const k = key(p, i), gate = t.startsWith('*');
+    return `<li><label for="c-${k}"><input type="checkbox" id="c-${k}" data-k="${k}"${state.done[k] ? ' checked' : ''}><span${gate ? ' class="gate-c"' : ''}>${label(t)}</span></label></li>`;
+  }).join('') + '</ul>';
+}
+function box(p, st, initial) {
+  const lamp = st === 'active' ? ' on' : '';
+  return `<div class="stepbox${initial ? ' initial' : ''}">${p.s}<span class="lamp mini${lamp}"></span></div>`;
+}
+function action(p, st, meta) {
+  const n = p.c.filter((_, i) => state.done[key(p, i)]).length;
+  return `<div class="action"><div class="qual" title="Non-stored action">N</div><div class="a-body"><div class="a-head"><h3>${p.name}</h3><span class="a-meta">${meta} · ${n}/${p.c.length}</span></div><p class="a-why">${p.why}</p>${checks(p)}</div></div>`;
+}
+function statusOf(ph) {
+  const seqOpen = ph.slice(0, 4).findIndex(p => !stepDone(p));
+  const st = {};
+  ph.slice(0, 4).forEach((p, i) => st[p.id] = seqOpen === -1 || i < seqOpen ? 'done' : i === seqOpen ? 'active' : 'wait');
+  const par = seqOpen === -1;
+  st.s5 = stepDone(PHASES[4]) && par ? 'done' : par ? 'active' : 'wait';
+  st.s6 = stepDone(APPLY) && par ? 'done' : par ? 'active' : 'wait';
+  return st;
+}
+function renderChart(ph, st) {
+  let h = '';
+  ph.slice(0, 4).forEach((p, i) => {
+    h += `<div class="row step${i ? '' : ' first'}" data-s="${st[p.id]}"><div>${box(p, st[p.id], !i)}</div><div class="conn"></div>${action(p, st[p.id], `${fmt(p.from)} – ${fmt(p.to)} · ${p.hrs} ชม.`)}</div>`;
+    h += `<div class="trans${p.key ? ' key' : ''}" data-s="${st[p.id] === 'done'}"><div class="bar"></div><div class="t-label"><b>${p.t}</b><span>${p.tNote}</span><span class="mono">${fmt(p.to, true)}</span></div></div>`;
+  });
+  const d = ph[4];
+  h += '<div class="dbl"></div><div class="par">';
+  h += `<div class="step" data-s="${st.s5}"><div class="stepwrap">${box(d, st.s5)}</div>${action(d, st.s5, `${fmt(d.from)} – ${fmt(d.to)} · ${d.hrs} ชม.`)}</div>`;
+  h += `<div class="step" data-s="${st.s6}"><div class="stepwrap">${box(APPLY, st.s6)}</div>${action(APPLY, st.s6, `เริ่ม ${fmt(d.from)}`)}</div>`;
+  h += '</div><div class="dbl"></div>';
+  const end = st.s5 === 'done' && st.s6 === 'done';
+  h += `<div class="trans" data-s="${end}"><div class="bar"></div><div class="t-label"><b>${d.t}</b><span>${d.tNote} และสมัครงานครบ</span><span class="mono">${fmt(d.to + 1, true)}</span></div></div>`;
+  h += `<div class="row step end" data-s="${end ? 'active' : 'wait'}"><div>${box({ s: 'S7' }, end ? 'active' : 'wait')}</div><div></div><div class="t-label" style="align-self:center"><b>พร้อมเต็มที่</b><span>เลือกเรียน Angular, Go หรือ Python ตามที่บริษัทใช้จริง</span></div></div>`;
+  $('chart').innerHTML = h;
+}
+function renderStrip(ph, t) {
+  const total = ph.reduce((a, p) => a + p.weeks, 0), now = Math.floor((t - toDay(START)) / 7);
+  $('strip').innerHTML = ph.map(p => {
+    let w = '';
+    for (let i = 0; i < p.weeks; i++) { const n = p.wkFrom + i; w += `<div class="wk${n < now ? ' past' : n === now && t >= toDay(START) ? ' now' : ''}"></div>`; }
+    return `<div class="seg" style="flex:${p.weeks} 1 0"><div class="seg-weeks">${w}</div><div class="seg-name">${p.short}</div></div>`;
+  }).join('');
+  $('strip-note').textContent = `${total} สัปดาห์ · ${ph.reduce((a, p) => a + p.hrs, 0)} ชั่วโมง · ${fmt(ph[0].from, true)} ถึง ${fmt(ph[4].to + 1, true)}`;
+  $('h-weeks').textContent = total;
+}
+function renderRead(ph, st, t) {
+  const total = ALL.reduce((a, p) => a + p.c.length, 0), n = ALL.reduce((a, p) => a + p.c.filter((_, i) => state.done[key(p, i)]).length, 0);
+  $('r-count').textContent = `${n} / ${total}`;
+  const g3 = ph[3].to + 1;
+  $('r-g3').textContent = fmt(g3, true);
+  const act = ALL.filter(p => st[p.id] === 'active');
+  const all = st.s5 === 'done' && st.s6 === 'done';
+  $('r-step').textContent = all ? 'S7 พร้อมเต็มที่' : act.map(p => `${p.s} ${p.short || p.name}`).join(' + ');
+  const start = toDay(START), lamp = $('r-lamp');
+  lamp.className = 'lamp';
+  if (all) { lamp.classList.add('on'); $('r-time').textContent = 'ครบทุกสเต็ปแล้ว'; return; }
+  if (t < start) { $('r-time').textContent = `เริ่มสัปดาห์แรกอีก ${start - t} วัน`; return; }
+  const total_w = ph.reduce((a, p) => a + p.weeks, 0), wk = Math.floor((t - start) / 7) + 1;
+  const idx = ph.findIndex(p => t <= p.to), planI = idx === -1 ? 4 : idx;
+  const actI = Math.min(...act.map(p => PHASES.indexOf(p)).filter(i => i >= 0).concat(4));
+  const late = planI - actI;
+  lamp.classList.add(late > 0 ? 'warn' : 'on');
+  $('r-time').textContent = `สัปดาห์ ${Math.min(wk, total_w)} จาก ${total_w} · ${late > 0 ? `ช้ากว่าแผน ${late} เฟส` : 'ตามแผน'}`;
+}
+function render() {
+  const ph = plan(), st = statusOf(ph), t = todayNum();
+  renderChart(ph, st); renderStrip(ph, t); renderRead(ph, st, t);
+  $('hours').value = state.hours;
+}
+
+/* Saving */
+let ref = null, timer = 0;
+const setSync = s => { $('sync').textContent = s; };
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
+  if (!ref) return;
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    ref.set({ done: state.done, hours: state.hours }).then(() => setSync('บันทึกแล้ว ใช้ได้ทุกเครื่อง'))
+      .catch(() => setSync('บันทึกในเบราว์เซอร์นี้'));
+  }, 400);
+}
+async function connect() {
+  if (!window.claude || !window.claude.use) return;
+  const db = await window.claude.use('db');
+  if (!db) return;
+  ref = db.doc('progress/main');
+  let first = true;
+  ref.onSnapshot(s => {
+    setSync('บันทึกแล้ว ใช้ได้ทุกเครื่อง');
+    if (s.exists) {
+      const d = s.data(), next = { done: d.done || {}, hours: d.hours || BASE_H };
+      if (JSON.stringify(next) !== JSON.stringify(state)) {
+        if (timer && !first) return;
+        const f = document.activeElement && document.activeElement.id;
+        state = next; render();
+        if (f && $(f)) $(f).focus({ preventScroll: true });
+        try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
+      }
+    } else if (first && Object.keys(state.done).length) { save(); }
+    first = false;
+  }, () => { ref = null; setSync('บันทึกในเบราว์เซอร์นี้'); });
+}
+
+/* Events */
+$('chart').addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.k;
+  if (!k) return;
+  if (e.target.checked) state.done[k] = true; else delete state.done[k];
+  const id = e.target.id;
+  render(); save();
+  $(id).focus({ preventScroll: true });
+});
+$('hours').addEventListener('change', e => {
+  const v = Math.max(5, Math.min(40, Math.round(Number(e.target.value)) || BASE_H));
+  state.hours = v; render(); save();
+});
+let armed = 0;
+$('reset').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (!armed) {
+    b.textContent = 'กดอีกครั้งเพื่อล้างทั้งหมด'; b.classList.add('arm');
+    armed = setTimeout(() => { armed = 0; b.textContent = 'ล้างความคืบหน้า'; b.classList.remove('arm'); }, 4000);
+    return;
+  }
+  clearTimeout(armed); armed = 0; b.textContent = 'ล้างความคืบหน้า'; b.classList.remove('arm');
+  state = { done: {}, hours: state.hours }; render(); save();
+});
+render();
+connect();
+</script>
+
+</body>
+</html>
