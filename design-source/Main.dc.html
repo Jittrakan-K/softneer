@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>PLC to Programmer Roadmap</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+body { margin: 0; background: #f5f5f2; }
+a { color: #1f4d3f; text-underline-offset: 3px; }
+a:hover { color: #17231f; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid #1f4d3f; outline-offset: 2px; }
+.sec { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 64px; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+.tri { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; }
+.hero { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 64px; align-items: end; }
+.tl { display: flex; gap: 4px; }
+.res { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; }
+.ph { transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
+.ph:hover { border-top-color: #1f4d3f !important; }
+.chk { transition: color .18s ease; }
+@media (max-width: 860px) {
+  .sec, .two, .hero, .res { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .tri { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .res { gap: 0; }
+  .tl { flex-direction: column; }
+  .ph { flex: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { .ph, .chk { transition: none; } }
+</style>
+</helmet>
+<div style="font-family: Anuphan, 'Noto Sans Thai', Tahoma, sans-serif; color: #1c211f; background: #f5f5f2; font-size: 17px; line-height: 1.75; font-weight: 400">
+
+  <header style="max-width: 1200px; margin: 0 auto; padding: 32px 24px 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap">
+    <div style="font-weight: 500">PLC to Programmer</div>
+    <nav aria-label="ส่วนของหน้า" style="display: flex; gap: 32px; flex-wrap: wrap; font-size: 15px">
+      <a href="#plan" style="text-decoration: none; color: #5b6360">แผน</a>
+      <a href="#job" style="text-decoration: none; color: #5b6360">ประกาศงาน</a>
+      <a href="#stack" style="text-decoration: none; color: #5b6360">Stack</a>
+      <a href="#work" style="text-decoration: none; color: #5b6360">ผลงาน</a>
+      <a href="#apply" style="text-decoration: none; color: #5b6360">สมัครงาน</a>
+      <a href="#learn" style="text-decoration: none; color: #5b6360">แหล่งเรียนรู้</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="max-width: 1200px; margin: 0 auto; padding: 120px 24px 96px">
+    <div>
+      <h1 style="margin: 0; font-size: clamp(40px, 6vw, 76px); line-height: 1.16; font-weight: 300; letter-spacing: -0.01em">จาก PLC สู่ Programmer<br>ใน 26 สัปดาห์</h1>
+      <p style="margin: 32px 0 0; max-width: 34em; color: #5b6360; font-size: 19px">แผนของ Nuy สำหรับตำแหน่ง Programmer / Developer ที่ INET เชียงใหม่ เรียนสัปดาห์ละ 15 ชั่วโมง แล้วเริ่มสมัครได้ตั้งแต่เดือนที่ 5</p>
+    </div>
+    <dl style="margin: 0; display: grid; gap: 16px; font-size: 15px">
+      <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid #dfe0db; padding-top: 12px"><dt style="color: #5b6360">เริ่มเรียน</dt><dd style="margin: 0">9 พ.ย. 2569</dd></div>
+      <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid #dfe0db; padding-top: 12px"><dt style="color: #5b6360">เริ่มสมัครงาน</dt><dd style="margin: 0; color: #1f4d3f; font-weight: 500">29 มี.ค. 2570</dd></div>
+      <div style="display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid #dfe0db; padding-top: 12px"><dt style="color: #5b6360">พร้อมเต็มที่</dt><dd style="margin: 0">10 พ.ค. 2570</dd></div>
+    </dl>
+  </section>
+
+  <section id="plan" style="max-width: 1200px; margin: 0 auto; padding: 0 24px 120px">
+    <div class="tl" role="group" aria-label="เลือกเฟส ความกว้างตามจำนวนสัปดาห์">
+      <sc-for list="{{phases}}" as="p" hint-placeholder-count="5">
+        <button type="button" class="ph" onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="flex: {{p.weeks}} 1 0; min-width: 0; text-align: left; font: inherit; color: {{p.ink}}; background: none; border: 0; border-top: {{p.rule}}; padding: 16px 8px 8px 0; cursor: pointer; min-height: 88px">
+          <span style="display: block; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5b6360">{{p.code}}</span>
+          <span style="display: block; font-size: 16px; line-height: 1.4; margin-top: 4px">{{p.short}}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div class="two" style="margin-top: 72px">
+      <div>
+        <p style="margin: 0; font-size: 15px; color: #5b6360">{{sel.dates}} · {{sel.weeks}} สัปดาห์ · {{sel.hours}} ชั่วโมง</p>
+        <h2 style="margin: 12px 0 0; font-size: 38px; line-height: 1.25; font-weight: 300">{{sel.name}}</h2>
+        <p style="margin: 20px 0 0; color: #5b6360; max-width: 28em">{{sel.why}}</p>
+        <p style="margin: 40px 0 0; font-size: 15px">จบเฟสนี้เมื่อ</p>
+        <p style="margin: 4px 0 0; color: #1f4d3f; max-width: 28em">{{sel.gate}}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 12px; font-size: 15px; color: #5b6360">ทำแล้ว {{sel.count}} จาก {{sel.total}}</p>
+        <sc-for list="{{sel.tasks}}" as="c" hint-placeholder-count="5">
+          <label class="chk" style="display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-top: 1px solid #dfe0db; cursor: pointer; color: {{c.ink}}">
+            <input type="checkbox" checked="{{c.done}}" onChange="{{c.toggle}}" style="width: 18px; height: 18px; margin: 5px 0 0; accent-color: #1f4d3f">
+            <span>{{c.text}}</span>
+          </label>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="job" class="sec" style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 96px; border-top: 1px solid #dfe0db; box-sizing: border-box">
+    <div>
+      <h2 style="margin: 0; font-size: 30px; line-height: 1.3; font-weight: 300">ประกาศงานต้องการอะไร</h2>
+      <p style="margin: 16px 0 0; color: #5b6360">ช่องว่างหลักอยู่ที่ Web, ฐานข้อมูล และการ Deploy ส่วนการคิดเป็นระบบและการ Debug มีฐานจากงาน PLC แล้ว</p>
+      <p style="margin: 16px 0 0; font-size: 15px"><a href="https://www.jobthai.com/th/company/job/1082395">ดูประกาศบน JobThai</a></p>
+    </div>
+    <div>
+      <div class="tri" style="font-size: 14px; color: #5b6360; padding-bottom: 12px"><span>ประกาศระบุ</span><span>ฐานเดิม</span><span>ต้องเพิ่ม</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>ปริญญาตรีสายที่เกี่ยวข้อง</span><span style="color: #5b6360">ต้องตรวจสาขาที่จบ</span><span>โทรถามว่าสาขาเข้าข่ายหรือไม่</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>Web application, Web services</span><span style="color: #5b6360">Function Block, Control Logic</span><span>HTTP, REST API, Frontend, Backend</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>HTML/CSS, VueJS, AngularTS</span><span style="color: #5b6360">ประสบการณ์จาก CALSA</span><span>Vue และ TypeScript ก่อน</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>Node.js, GoLang, Python</span><span style="color: #5b6360">Structured Text, SFC, CFC</span><span>Node.js ก่อน ภาษาอื่นไว้หลังได้งาน</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>SQL, MySQL, MongoDB</span><span style="color: #5b6360">ยังไม่มีข้อมูลประสบการณ์</span><span>SQL และการออกแบบตาราง</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>Docker, Deploy ขึ้น Production</span><span style="color: #5b6360">ยังไม่มีข้อมูลประสบการณ์</span><span>Linux, Docker, Nginx, CI/CD</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>UAT, SIT, Debug, แก้ Bug</span><span style="color: #5b6360">การไล่ปัญหาจากงาน PLC</span><span>Test Case, อ่าน Log, บันทึก Bug</span></div>
+      <div class="tri" style="padding: 14px 0; border-top: 1px solid #dfe0db; font-size: 16px"><span>ทำงานร่วมกับ Engineer, Designer, PM</span><span style="color: #5b6360">การทำงานเป็นโปรเจกต์</span><span>Git, Pull Request, Issue Tracker</span></div>
+    </div>
+  </section>
+
+  <section id="stack" class="sec" style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 96px; border-top: 1px solid #dfe0db; box-sizing: border-box">
+    <div>
+      <h2 style="margin: 0; font-size: 30px; line-height: 1.3; font-weight: 300">Stack เดียว เรียนให้ลึก</h2>
+      <p style="margin: 16px 0 0; color: #5b6360">ยังไม่ต้องเรียน Angular, Go, Python และ MongoDB ในรอบนี้ ผ่าน Gate 4 แล้วค่อยเลือกตามที่บริษัทใช้จริง</p>
+    </div>
+    <dl style="margin: 0">
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">ภาษา</dt><dd style="margin: 0">TypeScript</dd></div>
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">Frontend</dt><dd style="margin: 0">Vue 3, Vite</dd></div>
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">Backend</dt><dd style="margin: 0">Node.js 26, Express</dd></div>
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">ฐานข้อมูล</dt><dd style="margin: 0">MySQL</dd></div>
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">Deploy</dt><dd style="margin: 0">Docker, Nginx, Linux VPS</dd></div>
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt style="color: #5b6360">ทดสอบ</dt><dd style="margin: 0">Vitest, Playwright</dd></div>
+    </dl>
+  </section>
+
+  <section id="work" style="background: #17231f; color: #e9ede9">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box">
+      <h2 style="margin: 0; font-size: 38px; line-height: 1.25; font-weight: 300">สองผลงานที่พาไปถึงการสัมภาษณ์</h2>
+      <div class="two" style="margin-top: 56px">
+        <div style="border-top: 1px solid #3d4d47; padding-top: 20px">
+          <h3 style="margin: 0; font-size: 22px; font-weight: 400">CALSA</h3>
+          <p style="margin: 12px 0 0; color: #b4c0ba">ผลงานหลัก มี Vue, REST API, MySQL, Login, Test, Docker และ Deploy จริง ใช้ข้อมูลสมมติใน Demo เสมอ เพราะข้อมูลเงินเดือนเป็นข้อมูลอ่อนไหว</p>
+        </div>
+        <div style="border-top: 1px solid #3d4d47; padding-top: 20px">
+          <h3 style="margin: 0; font-size: 22px; font-weight: 400">PLC simulator</h3>
+          <p style="margin: 12px 0 0; color: #b4c0ba">จุดต่างจากผู้สมัครคนอื่น จำลองสายพานคัดแยกโลหะ พร้อม State Machine, Test และ README ส่วน GX Works2 ค่อยทำหลังสมัครงาน</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="apply" class="sec" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box">
+    <div>
+      <h2 style="margin: 0; font-size: 30px; line-height: 1.3; font-weight: 300">เล่าการย้ายสายด้วยภาษาของงาน</h2>
+      <p style="margin: 16px 0 0; color: #5b6360">คุณเขียนโปรแกรมควบคุมระบบจริงอยู่แล้ว และกำลังนำวิธีคิดนั้นมาใช้กับซอฟต์แวร์</p>
+    </div>
+    <div>
+      <dl style="margin: 0">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt>Function Block</dt><dd style="margin: 0; color: #5b6360">Class หรือ Module</dd></div>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt>SFC</dt><dd style="margin: 0; color: #5b6360">State Machine และ Workflow</dd></div>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt>Interlock</dt><dd style="margin: 0; color: #5b6360">Validation</dd></div>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt>Commissioning</dt><dd style="margin: 0; color: #5b6360">Integration Testing และ Debug</dd></div>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 24px; padding: 14px 0; border-top: 1px solid #dfe0db"><dt>คู่มือและผังระบบ</dt><dd style="margin: 0; color: #5b6360">README และเอกสาร API</dd></div>
+      </dl>
+      <p style="margin: 32px 0 0; color: #5b6360">ก่อนสมัครโทรถาม INET เชียงใหม่ 3 เรื่อง: สาขาที่จบเข้าเกณฑ์หรือไม่ รับผู้ย้ายสายหรือไม่ และทีมใช้ Stack ใด ถ้าไม่ผ่าน ทางสำรองคือ Software Tester, งาน Web ระดับเริ่มต้น หรือ SCADA, MES และ IoT</p>
+    </div>
+  </section>
+
+  <section id="learn" class="sec" style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 120px; border-top: 1px solid #dfe0db; box-sizing: border-box">
+    <div>
+      <h2 style="margin: 0; font-size: 30px; line-height: 1.3; font-weight: 300">แหล่งเรียนรู้</h2>
+      <p style="margin: 16px 0 0; color: #5b6360">ใช้ The Odin Project เป็นเส้นทางหลัก แล้วใช้เอกสารทางการเมื่อถึงแต่ละเทคโนโลยี</p>
+    </div>
+    <div class="res">
+      <a href="https://www.theodinproject.com/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">The Odin Project</a>
+      <a href="https://roadmap.sh" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">roadmap.sh</a>
+      <a href="https://www.freecodecamp.org/learn/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">freeCodeCamp</a>
+      <a href="https://developer.mozilla.org/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">MDN Web Docs</a>
+      <a href="https://www.typescriptlang.org/docs/handbook/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">TypeScript Handbook</a>
+      <a href="https://vuejs.org/guide/introduction.html" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">Vue Documentation</a>
+      <a href="https://nodejs.org/en/learn" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">Node.js Learn</a>
+      <a href="https://dev.mysql.com/doc/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">MySQL Documentation</a>
+      <a href="https://owasp.org/www-project-top-ten/" style="padding: 12px 0; border-top: 1px solid #dfe0db; text-decoration: none">OWASP Top 10</a>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4300}}'>
+const PHASES = [
+  { id: 's1', code: 'S1', short: 'ตั้งหลัก', name: 'ตั้งหลัก', weeks: 2, hours: 30, dates: '9–22 พ.ย. 2569', why: 'ตั้งเครื่องมือให้พร้อม และนำ CALSA เข้า GitHub',
+    gate: 'สร้าง Branch ทำ Pull Request และแก้ Merge Conflict ได้เอง',
+    tasks: ['ฝึก Git, GitHub, Command Line, VS Code และ DevTools', 'เรียน Linux พื้นฐาน', 'ตรวจสาขาที่จบและโทรสอบถาม INET', 'นำ CALSA เข้า GitHub', 'เขียน README และสรุปเทคโนโลยีที่ใช้'] },
+  { id: 's2', code: 'S2', short: 'Web และ TypeScript', name: 'พื้นฐาน Web และ TypeScript', weeks: 6, hours: 90, dates: '23 พ.ย. 2569 – 3 ม.ค. 2570', why: 'เขียนหน้าเว็บและคุยกับ API ได้โดยไม่ใช้ Framework',
+    gate: 'Gate 1: เขียนหน้าเว็บที่ Responsive เรียก API ด้วย Fetch และอธิบาย Request/Response ได้',
+    tasks: ['เรียน HTML และ CSS Layout', 'เรียน JavaScript, TypeScript และ DOM', 'เรียน Async/Await และ HTTP', 'ทำหน้าจำลองสายพานใน PLC simulator ด้วย State Machine'] },
+  { id: 's3', code: 'S3', short: 'Vue', name: 'Frontend ด้วย Vue', weeks: 4, hours: 60, dates: '4–31 ม.ค. 2570', why: 'สร้างหน้าจอ CALSA ใหม่ด้วย Vue',
+    gate: 'Gate 2: Frontend ทำงานครบด้วยข้อมูลจำลอง และแสดงผลได้ทั้งมือถือกับคอมพิวเตอร์',
+    tasks: ['เรียน Vue Component และ Composition API', 'เรียน Vue Router, Pinia และการจัดการ Form', 'สร้างหน้าจอ CALSA ด้วย Vue และ TypeScript', 'เพิ่มการ Validate ข้อมูล'] },
+  { id: 's4', code: 'S4', short: 'Backend และฐานข้อมูล', name: 'Backend และฐานข้อมูล', weeks: 8, hours: 120, dates: '1 ก.พ. – 28 มี.ค. 2570', why: 'ทำ API และฐานข้อมูลให้ CALSA ใช้งานได้จริง',
+    gate: 'Gate 3: เปิด CALSA ผ่านลิงก์สาธารณะได้ มี Login และอธิบายโค้ดได้เอง จากนั้นเริ่มสมัครงาน',
+    tasks: ['เรียน Node.js, Express และ REST API', 'เรียน SQL, Join, Index และ Transaction', 'เรียน Authentication และ OWASP Top 10', 'ทำ API ของ CALSA พร้อม MySQL และ Login', 'เพิ่มสิทธิ์ผู้ใช้และเอกสาร API'] },
+  { id: 's5', code: 'S5', short: 'Deploy และสมัครงาน', name: 'Deploy และสมัครงาน', weeks: 6, hours: 90, dates: '29 มี.ค. – 9 พ.ค. 2570', why: 'ทำให้ระบบ Deploy อัตโนมัติ พร้อมสมัครงานไปด้วยกัน',
+    gate: 'Gate 4: Push โค้ดแล้ว Test และ Deploy อัตโนมัติ ย้อนเวอร์ชันได้ และมีบันทึกการแก้ปัญหาจริง 3 เรื่อง',
+    tasks: ['เขียน Unit Test และ E2E Test', 'ตั้ง Docker Compose, Nginx, HTTPS และ GitHub Actions', 'ให้ผู้ใช้จริงทดลอง 3 คน และแก้ Bug', 'เตรียม Resume 1 หน้าและปักหมุด 2 ผลงาน', 'ฝึกสัมภาษณ์เทคนิคและอธิบายโค้ดของตัวเอง', 'ส่งใบสมัคร'] }
+];
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { picked: 's1', done: {} }; }
+  renderVals() {
+    const { picked, done } = this.state;
+    const phases = PHASES.map(p => {
+      const on = p.id === picked;
+      return { ...p, on, ink: on ? '#1c211f' : '#5b6360', rule: on ? '3px solid #1f4d3f' : '3px solid #dfe0db',
+        pick: () => this.setState({ picked: p.id }) };
+    });
+    const p = PHASES.find(x => x.id === picked);
+    const tasks = p.tasks.map((text, i) => {
+      const k = p.id + '-' + i, d = !!done[k];
+      return { text, done: d, ink: d ? '#5b6360' : '#1c211f',
+        toggle: () => this.setState({ done: { ...this.state.done, [k]: !d } }) };
+    });
+    return { phases, sel: { ...p, tasks, total: tasks.length, count: tasks.filter(t => t.done).length } };
+  }
+}
+</script>
+</body>
+</html>
